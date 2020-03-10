@@ -40,5 +40,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// by production: listen to process.env.Port which is given by deployment server
+// by development: run in local, and process.env.Port not exist, so we use 5000 by default
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);

@@ -5,10 +5,15 @@ const keys = require('../config/keys');
 
 const User = mongoose.model('users');
 
+// user to id, return id
+// serializeUser determines which data of the user object should be stored in the session. 
+// eg: req.session.passport.user = {id: 'xyz'}
 passport.serializeUser((user, done) => {
+  console.log(user) // user gives all user objects in DB, and user.id is not google.id, it is created automatically when new user is saved in DB
   done(null, user.id);
 });
 
+// id to user, return user
 passport.deserializeUser((id, done) => {
   User.findById(id).then(user => {
     done(null, user);
@@ -21,7 +26,7 @@ passport.use(
       clientID: keys.googleClientID,
       clientSecret: keys.googleClientSecret,
       callbackURL: '/auth/google/callback',
-      proxy: true
+      // proxy: true
     },
     async (accessToken, refreshToken, profile, done) => {
       const existingUser = await User.findOne({ googleId: profile.id });
@@ -30,6 +35,7 @@ passport.use(
         return done(null, existingUser);
       }
 
+      // const user = await new User({ googleId: profile.id }).save();
       const user = await new User({ googleId: profile.id }).save();
       done(null, user);
     }

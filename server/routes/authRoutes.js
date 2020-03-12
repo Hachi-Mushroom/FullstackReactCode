@@ -12,15 +12,18 @@ module.exports = app => {
     '/auth/google/callback',
     passport.authenticate('google'),
     (req, res) => {
-      res.redirect('/surveys');
+      // res.redirect('/surveys'); //! ADD 
+      res.send(req.user);  //! DELETE
     }
   );
 
   app.get('/api/logout', (req, res) => {
-    req.logout();
+    req.logout(); //logout() is from Passport.js
     res.redirect('/');
+
   });
 
+  // test session
   app.get('/api/current_user', (req, res) => {
     res.send(req.user);
   });
